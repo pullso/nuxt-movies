@@ -3,9 +3,8 @@
     <img src="../assets/imgs/movieHero.jpg" alt="">
     <div class="text-container">
       <div class="text">
-        <span class="mini-heading">Now streaming
-        </span>
-        <h1><span>Now</span>Streaming</h1>
+        <span class="mini-heading">Now streaming</span>
+        <h1><span>Now</span> Streaming</h1>
         <a href="#movie-grid" class="button">View Movies</a>
       </div>
     </div>
@@ -14,8 +13,7 @@
 
 <script>
 export default {
-  name: 'TheHero'
-
+  name: "TheHero"
 }
 </script>
 
@@ -29,7 +27,7 @@ export default {
   }
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;

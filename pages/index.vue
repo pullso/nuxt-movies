@@ -1,36 +1,54 @@
 <template>
   <div class="home">
     <TheHero />
-    <div id="movie-grid" class="movies-grid">
-      <div v-for="(movie, idx) in movies" :key="idx" class="movie">
-        <div class="movie-img">
-          <img
-            :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`"
-            alt=""
-          >
-        </div>
-        <p class="review">
-          {{ movie.vote_average }}
-        </p>
-        <p class="overview">
-          {{ movie.overview }}
-        </p>
-        <div class="info">
-          <p class="title">
-            {{ movie.title.slice(0, 20) }}
-            <span v-if="movie.title.length > 20">...</span>
-          </p>
-          <p class="release">
-            <NuxtLink
-              class="button button-light"
-              :to="{
-                name: 'movies-movieid',
-                params: { movieid: movie.id }
-              }"
+    <div class="container search">
+      <input
+        v-model.lazy="searchInput"
+        type="text"
+        placeholder="Search"
+        @keyup.enter="$fetch"
+      >
+      <button v-show="searchInput !== ''" class="button" @click="clearSearch">
+        Clear search
+      </button>
+    </div>
+
+    <div class="container movies">
+      <div id="movie-grid" class="movies-grid">
+        <div
+          v-for="(movie, idx) in searchInput !== '' ? searchedMovies : movies"
+          :key="idx"
+          class="movie"
+        >
+          <div class="movie-img">
+            <img
+              :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`"
+              alt=""
             >
-              Get More Info
-            </NuxtLink>
-          </p>
+            <p class="review">
+              {{ movie.vote_average }}
+            </p>
+            <p class="overview">
+              {{ movie.overview }}
+            </p>
+          </div>
+          <div class="info">
+            <p class="title">
+              {{ movie.title.slice(0, 20) }}
+              <span v-if="movie.title.length > 20">...</span>
+            </p>
+            <p class="release">
+              <NuxtLink
+                class="button button-light"
+                :to="{
+                  name: 'movies-movieid',
+                  params: { movieid: movie.id }
+                }"
+              >
+                Get More Info
+              </NuxtLink>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -38,22 +56,41 @@
 </template>
 
 <script>
-import getMovies from "@/api/getMovies.js"
+import { getMovies, getMoviesByQuery } from "@/api/getMovies.js"
 export default {
   name: "IndexPage",
   data() {
     return {
-      movies: []
+      movies: [],
+      searchedMovies: [],
+      searchInput: ""
     }
   },
   async fetch() {
-    await this.getMovies()
+    if (this.searchInput === "") {
+      await this.getMovies()
+      return
+    }
+
+    await this.getMoviesByQuery()
   },
   methods: {
     async getMovies() {
       try {
         this.movies = (await getMovies(this)) || []
       } catch (error) {}
+    },
+    async getMoviesByQuery() {
+      try {
+        this.searchedMovies =
+          (await getMoviesByQuery(this, this.searchInput)) || []
+      } catch (err) {
+        console.log(err, `err`)
+      }
+    },
+    clearSearch() {
+      this.searchInput = ""
+      this.searchedMovies = []
     }
   }
 }
