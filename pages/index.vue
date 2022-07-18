@@ -83,6 +83,18 @@ export default {
     }
     await this.getMoviesByQuery()
   },
+  head() {
+    return {
+      title: "Movie Streaming Info App",
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: "All description"
+        }
+      ]
+    }
+  },
   methods: {
     async getMovies() {
       try {

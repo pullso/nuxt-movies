@@ -60,6 +60,11 @@ export default {
   async fetch() {
     await this.getMovieById(this.$route.params.movieid)
   },
+  head() {
+    return {
+      title: this.movie?.title
+    }
+  },
   methods: {
     async getMovieById(id) {
       this.movie = await getMovieById(this, id)
