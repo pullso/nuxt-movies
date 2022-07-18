@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="app">
-    <Nuxt />
+    <Nuxt keep-alive />
   </div>
 </template>

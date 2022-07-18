@@ -12,8 +12,8 @@
         Clear search
       </button>
     </div>
-
-    <div class="container movies">
+    <TheLoader v-if="$fetchState.pending" />
+    <div v-else class="container movies">
       <div id="movie-grid" class="movies-grid">
         <div
           v-for="(movie, idx) in searchInput !== '' ? searchedMovies : movies"
@@ -38,16 +38,24 @@
               <span v-if="movie.title.length > 20">...</span>
             </p>
             <p class="release">
-              <NuxtLink
-                class="button button-light"
-                :to="{
-                  name: 'movies-movieid',
-                  params: { movieid: movie.id }
-                }"
-              >
-                Get More Info
-              </NuxtLink>
+              Released:
+              {{
+                new Date(movie.release_date).toLocaleString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric"
+                })
+              }}
             </p>
+            <NuxtLink
+              class="button button-light"
+              :to="{
+                name: 'movies-movieid',
+                params: { movieid: movie.id }
+              }"
+            >
+              Get More Info
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -56,9 +64,11 @@
 </template>
 
 <script>
+import TheLoader from "../components/TheLoader.vue"
 import { getMovies, getMoviesByQuery } from "@/api/getMovies.js"
 export default {
   name: "IndexPage",
+  components: { TheLoader },
   data() {
     return {
       movies: [],
@@ -71,7 +81,6 @@ export default {
       await this.getMovies()
       return
     }
-
     await this.getMoviesByQuery()
   },
   methods: {

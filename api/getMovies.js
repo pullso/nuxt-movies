@@ -19,7 +19,17 @@ async function getMoviesByQuery({ $axios }, query) {
   }
 }
 
+async function getMovieById({ $axios }, id) {
+  try {
+    const { data } = await $axios.get(`/movie/${id}?api_key=${apiKey}&language=en-US`)
+    return data
+  } catch (error) {
+    console.log(error, 'error')
+  }
+}
+
 export {
   getMoviesByQuery,
-  getMovies
+  getMovies,
+  getMovieById
 }
